@@ -19,12 +19,14 @@ header{position:sticky;top:0;z-index:10;background:#ffffffee;backdrop-filter:sat
 header .bar{display:flex;align-items:center;gap:12px;max-width:1200px;margin:auto;padding:12px 16px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
 .logo img{height:24px}
-nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
-nav button{background:transparent;border:1px solid var(--brand-border);color:var(--brand-text);padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .15s}
-nav button:hover{border-color:var(--brand-primary);color:var(--brand-primary)}
-nav button.active{background:var(--brand-primary);border-color:var(--brand-primary);color:#fff;box-shadow:0 0 0 2px rgba(181,18,27,.15) inset}
+.authbar{margin-left:auto;display:flex;gap:8px;align-items:center}
 
-.wrap{max-width:1200px;margin:20px auto;padding:0 16px}
+.tabs{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--brand-border);background:#fff;position:sticky;top:60px;z-index:9}
+.tabs button{background:transparent;border:1px solid var(--brand-border);color:var(--brand-text);padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .15s}
+.tabs button:hover{border-color:var(--brand-primary);color:var(--brand-primary)}
+.tabs button.active{background:var(--brand-primary);border-color:var(--brand-primary);color:#fff;box-shadow:0 0 0 2px rgba(181,18,27,.15) inset}
+
+.wrap{max-width:1200px;margin:16px auto;padding:0 16px}
 .grid{display:grid;gap:16px}
 .cols-3{grid-template-columns:repeat(3,1fr)}
 .cols-2{grid-template-columns:repeat(2,1fr)}
@@ -66,9 +68,14 @@ tr td:last-child{border-right:1px solid var(--brand-border);border-top-right-rad
 
 .sub{margin:0 0 8px 0;color:var(--brand-text);font-size:14px;font-weight:700}
 
+.auth-form{padding:16px;min-width:320px}
+.modal{padding:0;border:none;border-radius:16px;background:#fff;color:var(--brand-text);max-width:720px;width:92%}
+.modal-h{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--brand-border)}
+.modal-b{padding:16px}
+.modal-f{display:flex;gap:8px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--brand-border)}
+
 @media (max-width:900px){
   .cols-3{grid-template-columns:1fr}
   .cols-2{grid-template-columns:1fr}
   .row{grid-template-columns:1fr}
-  nav{width:100%}
 }
