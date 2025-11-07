@@ -2,242 +2,208 @@
 <html lang="nl">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Planning Tool – Delaware</title>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Planning Tool – Delaware (PoC v5.1)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body>
-    <div id="offline-banner">Firestore niet bereikbaar – wil je <button class="btn" id="retry-btn">opnieuw
-            proberen</button> of <button class="btn ghost" id="local-btn">lokaal verder</button>?</div>
-    <!-- AUTH BANNER / USERBAR -->
-    <header>
-        <div class="bar">
-            <div class="logo"><img src="delawarelogo.png" alt="delaware logo" /> <span class="sr-only"></span>
-            </div>
-            <span class="muted">we commit. we deliver.</span>
-            <div class="authbar">
-                <span id="whoami" class="muted"></span>
-                <button class="btn" id="btn-login">Log in</button>
-                <button class="btn" id="btn-logout" style="display:none">Log uit</button>
-            </div>
+  <div id="offline-banner">Firestore niet bereikbaar – wil je <button class="btn" id="retry-btn">opnieuw
+      proberen</button> of <button class="btn ghost" id="local-btn">lokaal verder</button>? </div>
+  <header>
+    <div class="bar">
+      <div class="logo">
+        <img src="delawarelogo.png" alt="delaware logo" />
+        <span class="sr-only"></span>
+      </div>
+      <span class="muted">we commit. we deliver.</span>
+      <div class="authbar">
+        <label style="margin-right:6px">Rol:</label>
+        <select id="role-picker">
+          <option value="manager">manager</option>
+          <option value="supervisor">supervisor</option>
+          <option value="employee" selected>employee</option>
+        </select>
+        <span id="whoami" class="muted" style="margin-left:8px"></span>
+      </div>
+    </div>
+  </header>
+  <nav id="tabs" class="tabs">
+    <button data-tab="dashboard" class="active">Dashboard</button>
+    <button data-tab="planning" data-role="manager supervisor">Centraal bord</button>
+    <button data-tab="tasks" data-role="manager">Taken</button>
+    <button data-tab="teams" data-role="manager">Teams</button>
+    <button data-tab="map" data-role="employee supervisor manager">Interactieve kaart</button>
+    <button data-tab="notifications" data-role="manager supervisor">Meldingen</button>
+    <button data-tab="my" data-role="employee supervisor manager">Mijn planning</button>
+  </nav>
+  <main class="wrap">
+    <section id="tab-dashboard">
+      <div class="grid cols-3">
+        <div class="panel">
+          <h2>Vandaag</h2>
+          <div class="content grid cols-2">
+            <div class="kpi"><span class="muted">Open taken</span><b id="kpi-open">0</b></div>
+            <div class="kpi"><span class="muted">In uitvoering</span><b id="kpi-inprogress">0</b></div>
+            <div class="kpi"><span class="muted">Afgerond</span><b id="kpi-done">0</b></div>
+            <div class="kpi"><span class="muted">Zieke werknemers</span><b id="kpi-sick">0</b></div>
+          </div>
         </div>
-    </header>
-    <!-- LOGIN DIALOG -->
-    <dialog id="login-dialog">
-        <form method="dialog" class="auth-form">
-            <h3>Inloggen</h3>
-            <label>E-mail</label>
-            <input id="auth-email" type="email" autocomplete="username" required />
-            <label>Wachtwoord</label>
-            <input id="auth-pass" type="password" autocomplete="current-password" required />
-            <div class="actions">
-                <button class="btn ghost" value="cancel">Annuleren</button>
-                <button class="btn primary" id="do-login" value="default">Inloggen</button>
+        <div class="panel">
+          <h2>Snel acties</h2>
+          <div class="content actions">
+            <button class="btn primary" onclick="ui.openCreateTask()" data-role="manager">Nieuwe taak</button>
+            <button class="btn" onclick="ui.openIllness()" data-role="employee supervisor manager">Ziekte
+              melden</button>
+            <button class="btn" onclick="ui.openHoliday()" data-role="employee supervisor manager">Vakantie
+              aanvragen</button>
+            <button class="btn ghost" onclick="exportCSV()" data-role="manager">Export CSV</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Laatste meldingen</h2>
+          <div class="content" id="latest-notifs"><span class="muted">Geen meldingen…</span></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h2>Maandstatus</h2>
+        <div class="content">
+          <div id="chart-month" class="chart"></div>
+        </div>
+      </div>
+    </section>
+    <section id="tab-planning" class="hide">
+      <div class="panel">
+        <h2>Centraal bord – Taken & uren plannen</h2>
+        <div class="content">
+          <div class="row">
+            <div><label>Team</label><select id="board-team"></select></div>
+            <div><label>Datum</label><input id="board-date" type="date" /></div>
+          </div>
+          <div class="grid cols-2" style="margin-top:12px">
+            <div>
+              <h3 class="sub">Ongeplande taken</h3>
+              <div id="board-unassigned" class="board-col"></div>
             </div>
-            <small class="muted">Heb je nog geen account? Vraag je manager om je toe te voegen met de juiste
-                rol.</small>
-        </form>
-    </dialog>
-    <!-- TABS -->
-    <nav id="tabs" class="tabs">
-        <button data-tab="dashboard" class="active">Dashboard</button>
-        <button data-tab="planning" data-role="manager">Centraal bord</button>
-        <button data-tab="tasks" data-role="manager">Taken</button>
-        <button data-tab="teams" data-role="manager">Teams</button>
-        <button data-tab="notifications" data-role="manager">Meldingen</button>
-        <button data-tab="my" data-role="employee supervisor manager">Mijn planning</button>
-    </nav>
-    <main class="wrap">
-        <!-- DASHBOARD -->
-        <section id="tab-dashboard">
-            <div class="grid cols-3">
-                <div class="panel">
-                    <h2>Vandaag</h2>
-                    <div class="content grid cols-2">
-                        <div class="kpi"><span class="muted">Open taken</span><b id="kpi-open">0</b></div>
-                        <div class="kpi"><span class="muted">In uitvoering</span><b id="kpi-inprogress">0</b></div>
-                        <div class="kpi"><span class="muted">Afgerond</span><b id="kpi-done">0</b></div>
-                        <div class="kpi"><span class="muted">Zieke werknemers</span><b id="kpi-sick">0</b></div>
-                    </div>
-                </div>
-                <div class="panel">
-                    <h2>Snel acties</h2>
-                    <div class="content actions">
-                        <button class="btn primary" onclick="ui.openCreateTask()" data-role="manager">Nieuwe
-                            taak</button>
-                        <button class="btn" onclick="ui.openAbsence()"
-                                data-role="employee supervisor manager">Afwezigheid melden</button>
-                        <button class="btn ghost" onclick="exportCSV()" data-role="manager">Export CSV</button>
-                    </div>
-                </div>
-                <div class="panel">
-                    <h2>Laatste meldingen</h2>
-                    <div class="content" id="latest-notifs"><span class="muted">Geen meldingen…</span></div>
-                </div>
+            <div>
+              <h3 class="sub">Teamplanning</h3>
+              <div id="board-assigned" class="board-col"></div>
             </div>
-        </section>
-        <!-- PLANNING BOARD (manager) -->
-        <section id="tab-planning" class="hide">
-            <div class="panel">
-                <h2>Centraal bord – Taken & uren plannen</h2>
-                <div class="content">
-                    <div class="row">
-                        <div>
-                            <label>Team</label>
-                            <select id="board-team"></select>
-                        </div>
-                        <div>
-                            <label>Datum</label>
-                            <input id="board-date" type="date" />
-                        </div>
-                    </div>
-                    <div class="grid cols-2" style="margin-top:12px">
-                        <div>
-                            <h3 class="sub">Ongeplande taken</h3>
-                            <div id="board-unassigned" class="board-col"></div>
-                        </div>
-                        <div>
-                            <h3 class="sub">Teamplanning</h3>
-                            <div id="board-assigned" class="board-col"></div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="tab-tasks" class="hide">
+      <div class="panel">
+        <h2>Taken beheren</h2>
+        <div class="content">
+          <div class="row">
+            <div><label>Team</label><select id="task-team"></select></div>
+            <div><label>Status</label>
+              <select id="task-status">
+                <option value="">Alle</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In uitvoering</option>
+                <option value="done">Afgerond</option>
+              </select>
             </div>
-        </section>
-        <!-- TASKS -->
-        <section id="tab-tasks" class="hide">
-            <div class="panel">
-                <h2>Taken beheren</h2>
-                <div class="content">
-                    <div class="row">
-                        <div>
-                            <label>Team</label>
-                            <select id="task-team"></select>
-                        </div>
-                        <div>
-                            <label>Status</label>
-                            <select id="task-status">
-                                <option value="">Alle</option>
-                                <option value="open">Open</option>
-                                <option value="in_progress">In uitvoering</option>
-                                <option value="done">Afgerond</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Datum</label>
-                            <input id="task-date" type="date" />
-                        </div>
-                    </div>
-                    <div class="actions" style="margin:12px 0">
-                        <button class="btn primary" onclick="ui.openCreateTask()">+ Taak</button>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Naam</th>
-                                <th>Plant</th>
-                                <th>Team</th>
-                                <th>Teamlid</th>
-                                <th>Duur (u)</th>
-                                <th>Datum</th>
-                                <th>Status</th>
-                                <th>Acties</th>
-                            </tr>
-                        </thead>
-                        <tbody id="task-rows"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        <!-- TEAMS -->
-        <section id="tab-teams" class="hide">
-            <div class="panel">
-                <h2>Teams</h2>
-                <div class="content">
-                    <div class="actions" style="margin-bottom:12px">
-                        <button class="btn primary" onclick="ui.openCreateTeam()">+ Team</button>
-                    </div>
-                    <div id="team-list"></div>
-                </div>
-            </div>
-        </section>
-        <!-- EMPLOYEES -->
-        <section id="tab-employees" class="hide">
-            <div class="panel">
-                <h2>Werknemers</h2>
-                <div class="content">
-                    <div class="actions" style="margin-bottom:12px">
-                        <button class="btn primary" onclick="ui.openCreateEmployee()">+ Werknemer</button>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Naam</th>
-                                <th>Rol</th>
-                                <th>Team</th>
-                                <th>Plant</th>
-                                <th>Status</th>
-                                <th>Acties</th>
-                            </tr>
-                        </thead>
-                        <tbody id="emp-rows"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        <!-- NOTIFICATIONS -->
-        <section id="tab-notifications" class="hide">
-            <div class="panel">
-                <h2>Meldingen</h2>
-                <div class="content">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Tijd</th>
-                                <th>Type</th>
-                                <th>Bericht</th>
-                                <th>Ontvanger</th>
-                                <th>Acties</th>
-                            </tr>
-                        </thead>
-                        <tbody id="notif-rows"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        <!-- MY PLANNING -->
-        <section id="tab-my" class="hide">
-            <div class="panel">
-                <h2>Mijn planning</h2>
-                <div class="content" id="my-planning"></div>
-            </div>
-            <div class="panel" style="margin-top:16px">
-                <h2>Mijn afwezigheden</h2>
-                <div class="content">
-                    <div class="actions" style="margin-bottom:12px">
-                        <button class="btn" onclick="ui.openAbsence()">+ Afwezigheid</button>
-                    </div>
-                    <div id="my-absences"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-    <dialog id="modal" class="modal">
-        <form method="dialog">
-            <header class="modal-h">
-                <b id="modal-title">Bewerken</b>
-                <button class="btn ghost" value="cancel">✕</button>
-            </header>
-            <div id="modal-body" class="modal-b"></div>
-            <footer class="modal-f">
-                <button class="btn ghost" value="cancel">Annuleren</button>
-                <button class="btn primary" id="modal-ok" value="default">Opslaan</button>
-            </footer>
-        </form>
-    </dialog>
-    <script type="module" src="app.js"></script>
+            <div><label>Datum</label><input id="task-date" type="date" /></div>
+          </div>
+          <div class="actions" style="margin:12px 0">
+            <button class="btn primary" onclick="ui.openCreateTask()">+ Taak</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Naam</th>
+                <th>Plant</th>
+                <th>Team</th>
+                <th>Teamlid</th>
+                <th>Duur (u)</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th>Acties</th>
+              </tr>
+            </thead>
+            <tbody id="task-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="tab-teams" class="hide">
+      <div class="panel">
+        <h2>Teams</h2>
+        <div class="content">
+          <div class="actions" style="margin-bottom:12px">
+            <button class="btn primary" onclick="ui.openCreateTeam()">+ Team</button>
+          </div>
+          <div id="team-list"></div>
+        </div>
+      </div>
+    </section>
+    <section id="tab-map" class="hide">
+      <div class="panel">
+        <h2>Interactieve kaart</h2>
+        <div class="content">
+          <div id="map" style="height:380px;border-radius:12px;overflow:hidden"></div>
+          <div id="map-info" style="margin-top:12px" class="grid cols-3"></div>
+        </div>
+      </div>
+    </section>
+    <section id="tab-notifications" class="hide">
+      <div class="panel">
+        <h2>Meldingen</h2>
+        <div class="content">
+          <table>
+            <thead>
+              <tr>
+                <th>Tijd</th>
+                <th>Type</th>
+                <th>Bericht</th>
+                <th>Ontvanger</th>
+                <th>Status</th>
+                <th>Acties</th>
+              </tr>
+            </thead>
+            <tbody id="notif-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="tab-my" class="hide">
+      <div class="panel">
+        <h2>Mijn planning</h2>
+        <div class="content" id="my-planning"></div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h2>Mijn afwezigheden</h2>
+        <div class="content">
+          <div class="actions" style="margin-bottom:12px">
+            <button class="btn" onclick="ui.openIllness()">+ Ziekte</button>
+            <button class="btn" onclick="ui.openHoliday()">+ Vakantie</button>
+          </div>
+          <div id="my-absences"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dialog id="modal" class="modal">
+    <form method="dialog">
+      <header class="modal-h">
+        <b id="modal-title">Bewerken</b>
+        <button class="btn ghost" value="cancel">✕</button>
+      </header>
+      <div id="modal-body" class="modal-b"></div>
+      <footer class="modal-f">
+        <button class="btn ghost" value="cancel">Annuleren</button>
+        <button class="btn primary" id="modal-ok" value="default">Opslaan</button>
+      </footer>
+    </form>
+  </dialog>
+  <script type="module" src="app.js"></script>
 </body>
 
 </html>
