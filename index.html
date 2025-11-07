@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="nl">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Planning Tool – Delaware (PoC v5.1)</title>
+  <title>Planning Tool – Delaware (PoC v5.2b)</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
-
 <body>
-  <div id="offline-banner">Firestore niet bereikbaar – wil je <button class="btn" id="retry-btn">opnieuw
-      proberen</button> of <button class="btn ghost" id="local-btn">lokaal verder</button>? </div>
+  <div id="offline-banner">Firestore niet bereikbaar – wil je
+    <button class="btn" id="retry-btn">opnieuw proberen</button>
+    of <button class="btn ghost" id="local-btn">lokaal verder</button>?
+  </div>
   <header>
     <div class="bar">
       <div class="logo">
-        <img src="delawarelogo.png" alt="delaware logo" />
-        <span class="sr-only"></span>
+        <img src="https://www.delaware.pro/-/media/project/delaware/shared/delaware_logo.svg" alt="delaware logo" />
+        <span class="sr-only">delaware</span>
       </div>
       <span class="muted">we commit. we deliver.</span>
       <div class="authbar">
@@ -55,12 +55,10 @@
         <div class="panel">
           <h2>Snel acties</h2>
           <div class="content actions">
-            <button class="btn primary" onclick="ui.openCreateTask()" data-role="manager">Nieuwe taak</button>
-            <button class="btn" onclick="ui.openIllness()" data-role="employee supervisor manager">Ziekte
-              melden</button>
-            <button class="btn" onclick="ui.openHoliday()" data-role="employee supervisor manager">Vakantie
-              aanvragen</button>
-            <button class="btn ghost" onclick="exportCSV()" data-role="manager">Export CSV</button>
+            <button class="btn primary" id="btn-new-task" data-role="manager">Nieuwe taak</button>
+            <button class="btn" id="btn-illness" data-role="employee supervisor manager">Ziekte melden</button>
+            <button class="btn" id="btn-holiday" data-role="employee supervisor manager">Vakantie aanvragen</button>
+            <button class="btn ghost" id="btn-export" data-role="manager">Export CSV</button>
           </div>
         </div>
         <div class="panel">
@@ -81,7 +79,7 @@
         <div class="content">
           <div class="row">
             <div><label>Team</label><select id="board-team"></select></div>
-            <div><label>Datum</label><input id="board-date" type="date" /></div>
+            <div><label>Datum</label><input id="board-date" type="date"/></div>
           </div>
           <div class="grid cols-2" style="margin-top:12px">
             <div>
@@ -113,19 +111,13 @@
             <div><label>Datum</label><input id="task-date" type="date" /></div>
           </div>
           <div class="actions" style="margin:12px 0">
-            <button class="btn primary" onclick="ui.openCreateTask()">+ Taak</button>
+            <button class="btn primary" id="btn-task-add">+ Taak</button>
           </div>
           <table>
             <thead>
               <tr>
-                <th>Naam</th>
-                <th>Plant</th>
-                <th>Team</th>
-                <th>Teamlid</th>
-                <th>Duur (u)</th>
-                <th>Datum</th>
-                <th>Status</th>
-                <th>Acties</th>
+                <th>Naam</th><th>Plant</th><th>Team</th><th>Teamlid</th>
+                <th>Duur (u)</th><th>Datum</th><th>Status</th><th>Acties</th>
               </tr>
             </thead>
             <tbody id="task-rows"></tbody>
@@ -138,7 +130,7 @@
         <h2>Teams</h2>
         <div class="content">
           <div class="actions" style="margin-bottom:12px">
-            <button class="btn primary" onclick="ui.openCreateTeam()">+ Team</button>
+            <button class="btn primary" id="btn-team-add">+ Team</button>
           </div>
           <div id="team-list"></div>
         </div>
@@ -148,7 +140,7 @@
       <div class="panel">
         <h2>Interactieve kaart</h2>
         <div class="content">
-          <div id="map" style="height:380px;border-radius:12px;overflow:hidden"></div>
+          <div id="map" style="height:380px;border-radius:12px;overflow:hidden;position:relative"></div>
           <div id="map-info" style="margin-top:12px" class="grid cols-3"></div>
         </div>
       </div>
@@ -159,14 +151,7 @@
         <div class="content">
           <table>
             <thead>
-              <tr>
-                <th>Tijd</th>
-                <th>Type</th>
-                <th>Bericht</th>
-                <th>Ontvanger</th>
-                <th>Status</th>
-                <th>Acties</th>
-              </tr>
+              <tr><th>Tijd</th><th>Type</th><th>Bericht</th><th>Ontvanger</th><th>Status</th><th>Acties</th></tr>
             </thead>
             <tbody id="notif-rows"></tbody>
           </table>
@@ -182,8 +167,8 @@
         <h2>Mijn afwezigheden</h2>
         <div class="content">
           <div class="actions" style="margin-bottom:12px">
-            <button class="btn" onclick="ui.openIllness()">+ Ziekte</button>
-            <button class="btn" onclick="ui.openHoliday()">+ Vakantie</button>
+            <button class="btn" id="btn-illness2">+ Ziekte</button>
+            <button class="btn" id="btn-holiday2">+ Vakantie</button>
           </div>
           <div id="my-absences"></div>
         </div>
@@ -205,5 +190,4 @@
   </dialog>
   <script type="module" src="app.js"></script>
 </body>
-
 </html>
