@@ -1,0 +1,317 @@
+/* ===============================
+   Delaware Unique Skin (v1)
+   — warme witten, zachte diepte,
+     glasaccenten, micro-animaties
+   =============================== */
+
+/* 1) Kleuren & theming */
+:root {
+    --brand-primary: #b5121b;
+    /* delaware rood */
+    --brand-primary-2: #d51b25;
+    /* iets lichter voor gradients */
+    --brand-bg: #f6f4f3;
+    /* warmer dan #f7f7f8 */
+    --brand-surface: #ffffff;
+    --brand-surface-2: #fff9f9;
+    /* heel subtiel rood-wit */
+    --brand-text: #15202b;
+    /* donkergrijs/blauw */
+    --brand-muted: #6c7a86;
+    --brand-border: #ece2e2;
+    /* warmere border */
+    --radius: 16px;
+    --radius-lg: 22px;
+
+    /* schaduwen */
+    --shadow-soft: 0 10px 30px rgba(21, 32, 43, .06);
+    --shadow-hard: 0 12px 40px rgba(181, 18, 27, .10);
+    --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, .75),
+        inset 0 -1px 0 rgba(0, 0, 0, .04);
+
+    /* glassy achtergrond voor header/nav */
+    --glass-bg: rgba(255, 255, 255, .7);
+    --glass-border: rgba(181, 18, 27, .15);
+}
+
+/* 2) Body & typografie */
+body {
+    background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(213, 27, 37, .06), transparent 55%),
+        radial-gradient(900px 500px at 110% -20%, rgba(213, 27, 37, .04), transparent 50%),
+        var(--brand-bg);
+    color: var(--brand-text);
+    letter-spacing: .1px;
+}
+
+/* 3) Header als glass-bar */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: saturate(1.3) blur(12px);
+    backdrop-filter: saturate(1.3) blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+header .bar {
+    gap: 16px;
+}
+
+.logo img {
+    height: 26px;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .08));
+}
+
+/* 4) Tabs als ‘chips’ met levendiger active state */
+.tabs {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 12px 16px;
+    gap: 10px;
+}
+
+.tabs button {
+    border: 1px solid var(--brand-border);
+    background: linear-gradient(#fff, #fff);
+    border-radius: 999px;
+    padding: 9px 14px;
+    transition: transform .06s ease, box-shadow .2s ease, color .2s, background .2s, border-color .2s;
+    box-shadow: var(--shadow-inset);
+}
+
+.tabs button:hover {
+    border-color: rgba(181, 18, 27, .3);
+    transform: translateY(-1px);
+}
+
+.tabs button.active {
+    color: #fff;
+    border-color: transparent;
+    background:
+        linear-gradient(180deg, var(--brand-primary-2), var(--brand-primary));
+    box-shadow: 0 6px 20px rgba(181, 18, 27, .25);
+}
+
+/* 5) Panels met zachte diepte & accentlijn */
+.panel {
+    background: linear-gradient(180deg, #fff, var(--brand-surface-2));
+    border: 1px solid var(--brand-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.panel h2 {
+    padding: 16px 18px;
+    font-size: 17px;
+    letter-spacing: .2px;
+    background: linear-gradient(180deg, #fff, rgba(255, 255, 255, .85));
+}
+
+.panel h2::after {
+    width: 6px;
+    background: linear-gradient(180deg, var(--brand-primary-2), var(--brand-primary));
+    border-top-left-radius: var(--radius-lg);
+    border-bottom-left-radius: var(--radius-lg);
+}
+
+.panel .content {
+    padding: 16px 18px 18px;
+}
+
+/* 6) KPI pillen: neumorfisch + micro animatie */
+.kpi {
+    background: #fff;
+    border: 1px solid var(--brand-border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-inset), var(--shadow-soft);
+    transition: transform .08s ease, box-shadow .25s ease;
+}
+
+.kpi:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(21, 32, 43, .10);
+}
+
+.kpi b {
+    font-weight: 800;
+}
+
+/* 7) Form elementen – soft, focus duidelijk */
+input, select, textarea {
+    border-radius: 12px;
+    border: 1px solid var(--brand-border);
+    background: #fff;
+    transition: box-shadow .2s, border-color .2s, transform .06s;
+    box-shadow: var(--shadow-inset);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: rgba(181, 18, 27, .45);
+    box-shadow: 0 0 0 4px rgba(181, 18, 27, .10);
+    transform: translateY(-1px);
+}
+
+/* 8) Buttons – primaire met glow, ghost subtieler */
+.btn {
+    border-radius: 12px;
+    border: 1px solid var(--brand-border);
+    background: #fff;
+    transition: transform .06s ease, box-shadow .2s ease, background .2s, color .2s;
+    box-shadow: var(--shadow-inset);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn.primary {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(180deg, var(--brand-primary-2), var(--brand-primary));
+    box-shadow: 0 8px 24px rgba(181, 18, 27, .30), inset 0 0 0 1px rgba(255, 255, 255, .35);
+}
+
+.btn.primary:hover {
+    box-shadow: 0 10px 30px rgba(181, 18, 27, .35);
+}
+
+.btn.ghost {
+    color: var(--brand-primary);
+    background: linear-gradient(#fff, #fff);
+    border-color: rgba(181, 18, 27, .22);
+}
+
+.btn.ghost:hover {
+    border-color: rgba(181, 18, 27, .40);
+}
+
+/* 9) Tabel – zwevende rijen */
+table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+th {
+    color: var(--brand-muted);
+    font-weight: 600;
+}
+
+td {
+    background: #fff;
+    border: 1px solid var(--brand-border);
+    box-shadow: var(--shadow-soft);
+}
+
+tr td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+tr td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* 10) Tags & badges */
+.tag {
+    background: linear-gradient(180deg, var(--brand-primary-2), var(--brand-primary));
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(181, 18, 27, .25);
+}
+
+.badge {
+    background: #fff;
+    border-color: rgba(181, 18, 27, .25);
+}
+
+/* 11) Offline banner opvallender */
+#offline-banner {
+    display: none;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-2));
+    color: #fff;
+    border-bottom: none;
+    box-shadow: var(--shadow-hard);
+}
+
+/* 12) Board-kolommen */
+.board-col {
+    background: #fff;
+    border: 1px dashed rgba(181, 18, 27, .25);
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+}
+
+.task-card {
+    border: 1px solid var(--brand-border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-soft);
+    transition: transform .06s ease, box-shadow .2s ease;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(21, 32, 43, .10);
+}
+
+/* 13) Modal – card met licht spotlight */
+.modal {
+    border-radius: 20px;
+    box-shadow: 0 24px 70px rgba(21, 32, 43, .30);
+}
+
+.modal-h, .modal-f {
+    background: linear-gradient(180deg, #fff, rgba(255, 255, 255, .92));
+}
+
+/* 14) Kaart – afgerond & tint */
+#map {
+    border-radius: 18px !important;
+    box-shadow: var(--shadow-soft);
+    outline: 1px solid rgba(181, 18, 27, .12);
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 14px !important;
+    box-shadow: var(--shadow-soft);
+}
+
+/* 15) Micro-animaties */
+@keyframes floatIn {
+    from {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.panel, .kpi, .task-card, .board-col {
+    animation: floatIn .25s ease both;
+}
+
+/* 16) Utility: muted subtieler op warm palet */
+.muted {
+    color: #7a8793;
+}
+
+/* 17) Accents voor focus op plant tiles (outline) */
+.plant-card {
+    transition: outline-color .2s ease, transform .06s;
+}
+
+.plant-card:hover {
+    transform: translateY(-1px);
+}

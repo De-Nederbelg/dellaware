@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Planning Tool – Delaware (PoC v5.2b)</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
+
 <body>
-  <div id="offline-banner">Firestore niet bereikbaar – wil je
-    <button class="btn" id="retry-btn">opnieuw proberen</button>
-    of <button class="btn ghost" id="local-btn">lokaal verder</button>?
-  </div>
+  <div id="offline-banner">Firestore niet bereikbaar – wil je <button class="btn" id="retry-btn">opnieuw
+      proberen</button> of <button class="btn ghost" id="local-btn">lokaal verder</button>? </div>
   <header>
     <div class="bar">
       <div class="logo">
-        <img src="https://www.delaware.pro/-/media/project/delaware/shared/delaware_logo.svg" alt="delaware logo" />
-        <span class="sr-only">delaware</span>
+        <img src="delawarelogo.png" alt="delaware logo" />
+        <span class="sr-only"></span>
       </div>
       <span class="muted">we commit. we deliver.</span>
       <div class="authbar">
@@ -79,7 +79,7 @@
         <div class="content">
           <div class="row">
             <div><label>Team</label><select id="board-team"></select></div>
-            <div><label>Datum</label><input id="board-date" type="date"/></div>
+            <div><label>Datum</label><input id="board-date" type="date" /></div>
           </div>
           <div class="grid cols-2" style="margin-top:12px">
             <div>
@@ -116,8 +116,14 @@
           <table>
             <thead>
               <tr>
-                <th>Naam</th><th>Plant</th><th>Team</th><th>Teamlid</th>
-                <th>Duur (u)</th><th>Datum</th><th>Status</th><th>Acties</th>
+                <th>Naam</th>
+                <th>Plant</th>
+                <th>Team</th>
+                <th>Teamlid</th>
+                <th>Duur (u)</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th>Acties</th>
               </tr>
             </thead>
             <tbody id="task-rows"></tbody>
@@ -151,7 +157,14 @@
         <div class="content">
           <table>
             <thead>
-              <tr><th>Tijd</th><th>Type</th><th>Bericht</th><th>Ontvanger</th><th>Status</th><th>Acties</th></tr>
+              <tr>
+                <th>Tijd</th>
+                <th>Type</th>
+                <th>Bericht</th>
+                <th>Ontvanger</th>
+                <th>Status</th>
+                <th>Acties</th>
+              </tr>
             </thead>
             <tbody id="notif-rows"></tbody>
           </table>
@@ -190,4 +203,5 @@
   </dialog>
   <script type="module" src="app.js"></script>
 </body>
+
 </html>

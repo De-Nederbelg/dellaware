@@ -1,0 +1,276 @@
+/* ===============================
+   Delaware Edge – Flat, crisp, bold
+   =============================== */
+
+/* 1) Vars (strakker, feller) */
+:root {
+    --brand-primary: #b5121b;
+    /* delaware rood */
+    --brand-primary-2: #8f0e15;
+    /* donker accent */
+    --brand-bg: #fafafa;
+    /* koeler, zeer licht */
+    --brand-surface: #ffffff;
+    --brand-text: #0f172a;
+    /* bijna-zwart blauw */
+    --brand-muted: #6b7280;
+    --brand-border: #dedede;
+    --radius: 14px;
+}
+
+/* 2) Flat layout + diagonale accentband */
+body {
+    background:
+        linear-gradient(120deg, rgba(181, 18, 27, .045) 0%, rgba(181, 18, 27, 0) 42%),
+        var(--brand-bg);
+    color: var(--brand-text);
+    letter-spacing: .15px;
+}
+
+/* 3) Header: super clean bar */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #fff;
+    border-bottom: 2px solid #f2f2f2;
+}
+
+header .bar {
+    gap: 18px;
+}
+
+.logo img {
+    height: 22px;
+    transform: translateY(-1px);
+}
+
+/* 4) Tabs: onderlijnd, pill hover, active = dikke rode lijn */
+.tabs {
+    background: #fff;
+    border-bottom: 2px solid #f2f2f2;
+    padding: 10px 16px 6px;
+    gap: 6px;
+}
+
+.tabs button {
+    border: none;
+    background: transparent;
+    color: #3a3a3a;
+    padding: 10px 12px;
+    border-radius: 10px;
+    position: relative;
+    transition: color .15s ease, background .15s ease;
+}
+
+.tabs button:hover {
+    background: #f6f6f6;
+    color: var(--brand-primary);
+}
+
+.tabs button.active {
+    color: var(--brand-primary);
+}
+
+.tabs button.active::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: -8px;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--brand-primary);
+}
+
+/* 5) Panel: flat card met rode linkerstrook bij hover */
+.panel {
+    background: var(--brand-surface);
+    border: 1.5px solid var(--brand-border);
+    border-radius: var(--radius);
+}
+
+.panel:hover {
+    border-color: #cfcfcf;
+}
+
+.panel h2 {
+    padding: 14px 16px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.panel h2::after {
+    width: 0;
+    /* geen vaste strook meer */
+    background: none;
+}
+
+/* 6) KPI: flat pill, rode tel, gridgaps groter */
+.kpi {
+    background: #fff;
+    border: 1.5px solid var(--brand-border);
+    border-radius: 12px;
+}
+
+.kpi b {
+    color: var(--brand-primary);
+    font-weight: 900;
+}
+
+/* 7) Inputs/selects: platte randen, duidelijke focusring */
+input, select, textarea {
+    border: 1.5px solid var(--brand-border);
+    border-radius: 10px;
+    background: #fff;
+    transition: border-color .12s ease, box-shadow .12s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(181, 18, 27, .15);
+}
+
+/* 8) Buttons: flat, bold; primary = solide rood, ghost = rode outline */
+.btn {
+    border: 1.5px solid var(--brand-border);
+    background: #fff;
+    color: #212121;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: 700;
+    transition: background .12s, color .12s, border-color .12s;
+}
+
+.btn:hover {
+    background: #f6f6f6;
+}
+
+.btn.primary {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    color: #fff;
+}
+
+.btn.primary:hover {
+    background: #a51019;
+    border-color: #a51019;
+}
+
+.btn.ghost {
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+    background: transparent;
+}
+
+.btn.ghost:hover {
+    background: rgba(181, 18, 27, .06);
+}
+
+/* 9) Tabel: zebra-flat, dikke rijaccent bij hover */
+table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+th {
+    color: #6b7280;
+    font-weight: 700;
+}
+
+td {
+    background: #fff;
+    border: 1.5px solid var(--brand-border);
+}
+
+tr td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+tr td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+tbody tr:hover td {
+    border-color: #cfcfcf;
+}
+
+/* 10) Tags/badges: zeer vlak, met border */
+.tag {
+    background: var(--brand-primary);
+    color: #fff;
+    border: 1.5px solid var(--brand-primary);
+}
+
+.badge {
+    background: #fff;
+    border: 1.5px solid #e6b3b6;
+    /* subtiel rood randje */
+    color: #b43a41;
+}
+
+/* 11) Board-kolommen + task-cards: strakke kolommen */
+.board-col {
+    background: #fff;
+    border: 2px dashed #e3a4a8;
+    border-radius: 14px;
+}
+
+.task-card {
+    border: 1.5px solid var(--brand-border);
+    border-radius: 12px;
+}
+
+.task-card:hover {
+    border-color: #cfcfcf;
+}
+
+/* 12) Offline banner: opvallend vlak */
+#offline-banner {
+    display: none;
+    background: var(--brand-primary);
+    color: #fff;
+    border-bottom: 0;
+}
+
+/* 13) Map styling minimalistisch */
+#map {
+    border-radius: 14px !important;
+    border: 1.5px solid var(--brand-border);
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    border: 1.5px solid var(--brand-border);
+}
+
+/* 14) Micro-interactions: snelle scale op clickable chips/tiles */
+.kpi, .task-card, .plant-card {
+    transition: transform .06s ease;
+}
+
+.kpi:hover, .task-card:hover, .plant-card:hover {
+    transform: translateY(-1px);
+}
+
+/* 15) Typografie & spacing tweaks */
+.panel .content {
+    padding: 16px 16px 18px;
+}
+
+label {
+    font-size: 12px;
+    color: #5f6b76;
+    letter-spacing: .2px;
+}
+
+.wrap {
+    max-width: 1200px;
+}
+
+.grid {
+    gap: 18px;
+}
